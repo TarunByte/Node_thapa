@@ -1,12 +1,12 @@
-// console.log(global);
-global.console.log("subscribe");
-globalThis.console.log("Thapa Technical");
+// const add = require("./math");
+// const mult = require("./math");
 
-// globalThis.console.log(module);
-console.log(globalThis.module);
-//* commonjs
-// console.log(process);
-// console.log(document); // js
+const { add, mult, subs, div, PI } = require("./math");
 
-// React - Component;
-// Node - module;
+console.log(add(5, 10));
+console.log(mult(5, 10));
+console.log(subs(5, 10));
+console.log(div(5, 10));
+console.log(PI);
+
+//commonjs
