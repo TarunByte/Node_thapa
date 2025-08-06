@@ -1,4 +1,12 @@
-console.log("Hello World");
+// console.log(global);
+global.console.log("subscribe");
+globalThis.console.log("Thapa Technical");
 
-const arr = [1, 2, 3, 4, 5];
-console.log(arr.map((num) => num * 5));
+// globalThis.console.log(module);
+console.log(globalThis.module);
+//* commonjs
+// console.log(process);
+// console.log(document); // js
+
+// React - Component;
+// Node - module;
