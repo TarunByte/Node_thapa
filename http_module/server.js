@@ -4,7 +4,7 @@ const http = require("http");
 const server = http.createServer((req, res) => {
   if (req.url === "/") {
     res.setHeader("Content-Type", "text/html");
-    res.write("<h1> I am Vinod Bahadur Thapa aka Thapa Technical. </h1>");
+    res.write("<h1> I am Vinod Bahadur Thapa aka Thapa Technical. LIke</h1>");
     res.end();
   }
 
@@ -17,7 +17,7 @@ const server = http.createServer((req, res) => {
 
   if (req.url === "/contact") {
     res.setHeader("Content-Type", "text/plain");
-    res.write("Have a Project or want to Collaborate?");
+    res.write("Have a Project or want to Collaborate? whatsapp now");
     res.end();
   }
 });
