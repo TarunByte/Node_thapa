@@ -28,7 +28,7 @@
     <script>
       document
         .getElementById("shorten-form")
-        .addEventListener("submit", (event) => {
+        .addEventListener("submit", async (event) => {
           event.preventDefault();
 
           const formData = new FormData(event.target);
@@ -36,6 +36,24 @@
           const shortCode = formData.get("shortCode");
 
           console.log(url, shortCode);
+
+          try {
+            const response = await fetch("/shorten", {
+              method: "POST",
+              headers: { "Content-type": "application/json" },
+              body: JSON.stringify({ url, shortCode }),
+            });
+
+            if (response.ok) {
+              alert("form submitted successfully");
+              event.target.reset();
+            } else {
+              const errorMessage = await response.text();
+              alert(errorMessage);
+            }
+          } catch (error) {
+            console.log(error);
+          }
         });
     </script>
   </body>
