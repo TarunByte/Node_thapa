@@ -1,4 +1,5 @@
 import express from "express";
+import { PORT } from "./env.js";
 
 // app - This variable holds the created Express app, which you can use to:
 // Define routes (app.get(), app.post(), etc.)
@@ -31,7 +32,7 @@ app.get("/contact", (req, res) => {
     </div>`);
 });
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running at port: ${PORT}`);
 });
