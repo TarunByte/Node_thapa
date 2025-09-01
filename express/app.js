@@ -1,5 +1,6 @@
 import express from "express";
 import { PORT } from "./env.js";
+import path from "path";
 
 // app - This variable holds the created Express app, which you can use to:
 // Define routes (app.get(), app.post(), etc.)
@@ -8,31 +9,18 @@ import { PORT } from "./env.js";
 
 const app = express();
 
-app.get("/", (req, res) => res.send("<h1>Hello World!</h1>"));
+// console.log(__dirname);
+// console.log(__filename);
+app.get("/", (req, res) => {
+  // console.log(import.meta.url);
+  // const __filename = new URL(import.meta.url).pathname;
+  // console.log(__filename);
 
-app.get("/about", (req, res) => res.send("<h1>Hello About Page!</h1>"));
+  const homePagePath = path.join(import.meta.dirname, "public", "index.html");
 
-app.get("/contact", (req, res) => {
-  return res.send(` <div class="container">
-      <h1>URL Shortener</h1>
-      <form id="shorten-form">
-        <div>
-          <label for="url">Enter URL:</label>
-          <input type="url" name="url" id="url" required />
-        </div>
-        <div>
-          <label for="shortCode">Enter shortCode:</label>
-          <input type="text" name="shortCode" id="shortCode" required />
-        </div>
-        <button type="submit">Shorten</button>
-      </form>
-
-      <h2>Shortened URLs</h2>
-      <ul id="shortened-urls"></ul>
-    </div>`);
+  res.sendFile(homePagePath);
 });
 
-// const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running at port: ${PORT}`);
 });
