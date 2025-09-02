@@ -20,6 +20,13 @@ const staticPath = path.join(import.meta.dirname, "public");
 
 app.use("/public", express.static(staticPath));
 
+app.get("/products", (req, res) => {
+  console.log(req.query);
+  res.send(
+    `<h1> user search for Product ${req.query.page} ${req.query.limit}Page </h1>`
+  );
+});
+
 app.get("/profile/:username", (req, res) => {
   console.log(req.params);
   res.send(`<h1>My username is ${req.params.username} </h1>`);
