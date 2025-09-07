@@ -23,6 +23,21 @@ const saveLinks = async (links) => {
   await writeFile(DATA_FILE, JSON.stringify(links));
 };
 
+router.get("/report", (req, res) => {
+  const student = [
+    {
+      name: "Aarav",
+      grade: "10th",
+      favoriteSubject: "Mathematics",
+    },
+    { name: "Ishita", grade: "9th", favoriteSubject: "Science" },
+    { name: "Rohan", grade: "8th", favoriteSubject: "History" },
+    { name: "Meera", grade: "10th", favoriteSubject: "English" },
+    { name: "Kabir", grade: "11th", favoriteSubject: "Physics" },
+  ];
+  return res.render("report", { student });
+});
+
 router.get("/", async (req, res) => {
   try {
     const file = await readFile(path.join("views", "index.html"));
