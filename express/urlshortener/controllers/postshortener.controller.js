@@ -1,28 +1,11 @@
 import crypto from "crypto";
 import { loadLinks, saveLinks } from "../models/shortener.model.js";
-import { readFile } from "fs/promises";
-import path from "path";
 
 export const getShortnerPage = async (req, res) => {
   try {
-    const file = await readFile(path.join("views", "index.html"));
+    // const file = await readFile(path.join("views", "index.html"));
     const links = await loadLinks();
-
-    const content = file.toString().replaceAll(
-      "{{ shortened_urls }}",
-      Object.entries(links)
-        .map(
-          ([shortCode, url]) =>
-            `<li><a href="/${shortCode}" target="_blank">${
-              req.host
-            }/${shortCode}</a> - ${
-              url.length >= 30 ? `${url.slice(0, 3)}...` : url
-            }</li>`
-        )
-        .join("")
-    );
-
-    return res.send(content);
+    return res.render("index", { links, host: req.host });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal server error");
