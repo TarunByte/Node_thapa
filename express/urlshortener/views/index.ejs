@@ -24,8 +24,8 @@
       <h2>Shortened URLs</h2>
       <ul>
         <!-- {{ shortened_urls }} -->
-        <% Object.entries(links).map(([shortCode, url])=> { %> <% const
-        truncatedURL = url.length >= 30 ? `${url.slice(0, 30)}...` : url %>
+        <% links.map(({shortCode, url})=> { %> <% const truncatedURL =
+        url.length >= 30 ? `${url.slice(0, 30)}...` : url %>
 
         <li>
           <a href="/<%= shortCode%>" target="_blank">
