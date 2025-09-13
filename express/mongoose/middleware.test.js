@@ -9,22 +9,27 @@ try {
 }
 
 // step 2: create schema
-const userSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  age: { type: Number, required: true, min: 5 },
-  createdAt: { type: Date, default: Date.now() },
-  updatedAt: { type: Date, default: Date.now() },
-});
-
-// we will use middleware
-userSchema.pre(
-  ["updateOne", "updateMany", "findOneAndUpdate"],
-  function (next) {
-    this.set({ updatedAt: Date.now() });
-    next();
+const userSchema = mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    age: { type: Number, required: true, min: 5 },
+    //   createdAt: { type: Date, default: Date.now() },
+    //   updatedAt: { type: Date, default: Date.now() },
+  },
+  {
+    timestamps: true,
   }
 );
+
+// // we will use middleware
+// userSchema.pre(
+//   ["updateOne", "updateMany", "findOneAndUpdate"],
+//   function (next) {
+//     this.set({ updatedAt: Date.now() });
+//     next();
+//   }
+// );
 
 // step 3: create a model
 const Users = mongoose.model("users", userSchema);
@@ -33,6 +38,6 @@ const Users = mongoose.model("users", userSchema);
 // await Users.create({ name: "thapa", age: 21, email: "thapa@technical.com" });
 
 // step 4: to insert the data
-await Users.updateOne({ email: "thapa@technical.com" }, { $set: { age: 21 } });
+await Users.updateOne({ email: "thapa@technical.com" }, { $set: { age: 20 } });
 
 await mongoose.connection.close();
