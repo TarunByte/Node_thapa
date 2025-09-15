@@ -20,20 +20,40 @@
 //   await writeFile(DATA_FILE, JSON.stringify(links));
 // };
 
-import { dbClient } from "../config/db-client.js";
-import { env } from "../config/env.js";
+// import { dbClient } from "../config/db-client.js";
+// import { env } from "../config/env.js";
 
-const db = dbClient.db(env.MONGODB_DATABASE_NAME);
-const shortenerCollection = db.collection("shorteners");
+// const db = dbClient.db(env.MONGODB_DATABASE_NAME);
+// const shortenerCollection = db.collection("shorteners");
+
+import { db } from "../config/db-client.js";
 
 export const loadLinks = async () => {
-  return shortenerCollection.find().toArray();
+  // return shortenerCollection.find().toArray();
+  const [rows] = await db.execute("select * from short_links");
+  return rows;
 };
 
-export const saveLinks = async (link) => {
-  return shortenerCollection.insertOne(link);
+export const insertShortLink = async ({ url, shortCode }) => {
+  // return shortenerCollection.insertOne(link);
+  const [result] = await db.execute(
+    "insert into short_links(short_code, url) values(?,?)",
+    [shortCode, url]
+  );
+  return result;
 };
 
 export const getLinkByShortCode = async (shortcode) => {
-  return await shortenerCollection.findOne({ shortCode: shortcode });
+  // return await shortenerCollection.findOne({ shortCode: shortcode });
+
+  const [rows] = await db.execute(
+    `select * from short_links where short_code = ?`,
+    [shortcode]
+  );
+
+  if (rows.length > 0) {
+    return rows[0];
+  } else {
+    return null;
+  }
 };
