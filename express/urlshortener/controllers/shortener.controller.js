@@ -1,9 +1,15 @@
-import crypto from "crypto";
+// import crypto from "crypto";
+// import {
+//   loadLinks,
+//   getLinkByShortCode,
+//   insertShortLink,
+// } from "../models/shortener.model.js";
+
 import {
-  loadLinks,
   getLinkByShortCode,
   insertShortLink,
-} from "../models/shortener.model.js";
+  loadLinks,
+} from "../services/shorterner.services.js";
 
 // import { urls } from "../schema/url_schema.js";
 

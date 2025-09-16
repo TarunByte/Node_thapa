@@ -26,7 +26,7 @@
 // const db = dbClient.db(env.MONGODB_DATABASE_NAME);
 // const shortenerCollection = db.collection("shorteners");
 
-import { db } from "../config/db-client.js";
+// import { db } from "../config/db-client.js";
 
 export const loadLinks = async () => {
   // return shortenerCollection.find().toArray();
