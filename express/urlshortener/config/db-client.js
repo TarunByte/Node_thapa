@@ -23,3 +23,6 @@
 //   password: env.DATABSE_PASSWORD,
 //   database: env.DATABASE_NAME,
 // });
+
+import { drizzle } from "drizzle-orm/mysql2";
+export const db = drizzle(process.env.DATABASE_URL);

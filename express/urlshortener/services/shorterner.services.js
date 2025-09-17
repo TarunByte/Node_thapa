@@ -1,27 +1,37 @@
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+import { eq } from "drizzle-orm";
+import { db } from "../config/db-client.js";
+import { shortLinksTable } from "../drizzle/schema.js";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
-export const loadLinks = async () => {
+export const getAllShortLinks = async () => {
   //   const [rows] = await db.execute("select * from short_links");
   //   return rows;
 
-  const allShortLinks = await prisma.shortLink.findMany();
-  return allShortLinks;
+  // const allShortLinks = await prisma.shortLink.findMany();
+  // return allShortLinks;
+
+  return await db.select().from(shortLinksTable);
 };
 
-export const getLinkByShortCode = async (shortcode) => {
+export const getShortLinkByShortCode = async (shortCode) => {
   // return await shortenerCollection.findOne({ shortCode: shortcode });
-
   //   const [rows] = await db.execute(
   //     `select * from short_links where short_code = ?`,
   //     [shortcode]
   //   );
 
-  const shortLink = await prisma.shortLink.findUnique({
-    where: { shortCode: shortcode },
-  });
-  return shortLink;
+  // const shortLink = await prisma.shortLink.findUnique({
+  //   where: { shortCode: shortcode },
+  // });
+  // return shortLink;
+
+  const [result] = await db
+    .select()
+    .from(shortLinksTable)
+    .where(eq(shortLinksTable.shortCode, shortCode));
+  return result;
 };
 
 export const insertShortLink = async ({ url, shortCode }) => {
@@ -32,8 +42,10 @@ export const insertShortLink = async ({ url, shortCode }) => {
   //   );
   //   return result;
 
-  const newShortLink = prisma.shortLink.create({
-    data: { shortCode, url },
-  });
-  return newShortLink;
+  // const newShortLink = prisma.shortLink.create({
+  //   data: { shortCode, url },
+  // });
+  // return newShortLink;
+
+  await db.insert(shortLinksTable).values({ url, shortCode });
 };
