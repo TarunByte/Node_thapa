@@ -7,7 +7,11 @@
     <title>Document</title>
   </head>
   <body>
-    <%- include('./partials/header') %>
+    <%- include('./partials/header') %> <% if(isLoggedIn) {%>
+    <h2>You are logged In</h2>
+    <%} else {%>
+    <h2>You are not logged In</h2>
+    <% }%>
 
     <div class="container">
       <h1>URL Shortener</h1>
