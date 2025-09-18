@@ -20,15 +20,17 @@ export const getShortnerPage = async (req, res) => {
     // const links = await urls.find();
     const links = await getAllShortLinks();
 
-    let isLoggedIn = req.headers.cookie;
-    isLoggedIn = Boolean(
-      isLoggedIn
-        ?.split(";")
-        ?.find((cookie) => cookie.trim().startsWith("isLoggedIn"))
-        ?.split("=")[1]
-    );
+    // let isLoggedIn = req.headers.cookie;
+    // isLoggedIn = Boolean(
+    //   isLoggedIn
+    //     ?.split(";")
+    //     ?.find((cookie) => cookie.trim().startsWith("isLoggedIn"))
+    //     ?.split("=")[1]
+    // );
 
-    console.log("~ getShortenerPage ~ isLoggedIn:", isLoggedIn);
+    // console.log("~ getShortenerPage ~ isLoggedIn:", isLoggedIn);
+
+    let isLoggedIn = req.cookies.isLoggedIn;
 
     return res.render("index", { links, host: req.host, isLoggedIn });
   } catch (error) {
