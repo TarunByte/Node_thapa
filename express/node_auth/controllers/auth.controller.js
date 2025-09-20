@@ -10,7 +10,7 @@ export const getRegisterPage = (req, res) => {
 };
 
 export const postRegister = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { name, email, password } = req.body;
 
   const userExists = await getUserByEmail(email);
