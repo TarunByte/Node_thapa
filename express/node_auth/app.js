@@ -4,6 +4,7 @@ import { shortenerRoutes } from "./routes/shortener.routes.js";
 import { env } from "./config/env.js";
 import { authRoutes } from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
+import { verifyAuthentication } from "./middlewares/verify-auth-middleware.js";
 
 const app = express();
 
@@ -16,6 +17,9 @@ app.set("view engine", "ejs");
 // app.set("views", "./views");
 
 app.use(cookieParser());
+
+//This must be after cookieParser middleware.
+app.use(verifyAuthentication);
 
 //express router
 // app.use(router);
