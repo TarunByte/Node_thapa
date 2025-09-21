@@ -30,7 +30,7 @@ export const getShortnerPage = async (req, res) => {
 
     // console.log("~ getShortenerPage ~ isLoggedIn:", isLoggedIn);
 
-    let isLoggedIn = req.cookies.isLoggedIn;
+    let isLoggedIn = req.cookies.access_token;
 
     return res.render("index", { links, host: req.host, isLoggedIn });
   } catch (error) {
