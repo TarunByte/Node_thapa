@@ -15,24 +15,9 @@ import {
 
 export const getShortnerPage = async (req, res) => {
   try {
-    // const file = await readFile(path.join("views", "index.html"));
-    // const links = await loadLinks();
-    // const links = await urls.find();
     const links = await getAllShortLinks();
 
-    // let isLoggedIn = req.headers.cookie;
-    // isLoggedIn = Boolean(
-    //   isLoggedIn
-    //     ?.split(";")
-    //     ?.find((cookie) => cookie.trim().startsWith("isLoggedIn"))
-    //     ?.split("=")[1]
-    // );
-
-    // console.log("~ getShortenerPage ~ isLoggedIn:", isLoggedIn);
-
-    let isLoggedIn = req.cookies.access_token;
-
-    return res.render("index", { links, host: req.host, isLoggedIn });
+    return res.render("index", { links, host: req.host });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal server error");

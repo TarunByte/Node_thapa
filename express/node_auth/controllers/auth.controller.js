@@ -59,3 +59,8 @@ export const postLogin = async (req, res) => {
 
 // Do You Need to Set Path=/ Manually?
 // cookie-parser and Express automatically set the path to / by default.
+
+export const getMe = (req, res) => {
+  if (!req.user) return res.send("Not logged in");
+  return res.send(`<h1>Hey ${req.user.name} - ${req.user.email}</h1>`);
+};
