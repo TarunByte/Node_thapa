@@ -1,0 +1,1 @@
+ALTER TABLE `short_link` ADD `created_at` timestamp DEFAULT (now()) NOT NULL;
