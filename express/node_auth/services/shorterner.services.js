@@ -30,3 +30,11 @@ export const findShortLinkById = async (id) => {
     .where(eq(shortLinksTable.id, id));
   return result;
 };
+
+// updateShortCode
+export const updateShorCode = async ({ id, url, shortCode }) => {
+  return await db
+    .update(shortLinksTable)
+    .set({ url, shortCode })
+    .where(eq(shortLinksTable.id, id));
+};
