@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1758115092490,
-      "tag": "0000_clean_madripoor",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1758296319714,
-      "tag": "0001_ambitious_avengers",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1758555240468,
-      "tag": "0002_faulty_spectrum",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1758556414503,
-      "tag": "0003_living_zodiak",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1758556645224,
-      "tag": "0004_sour_wong",
+      "when": 1758736450965,
+      "tag": "0000_productive_franklin_richards",
       "breakpoints": true
     }
   ]
