@@ -1,5 +1,6 @@
 import { ZodError } from "zod";
 import {
+  clearUserSession,
   comparePassword,
   createAccessToken,
   createRefreshToken,
@@ -146,7 +147,10 @@ export const getMe = (req, res) => {
   return res.send(`<h1>Hey ${req.user.name} - ${req.user.email}</h1>`);
 };
 
-export const logoutUser = (req, res) => {
+export const logoutUser = async (req, res) => {
+  await clearUserSession(req.user.sessionId);
+
   res.clearCookie("access_token");
+  res.clearCookie("refresh_token");
   res.redirect("/login");
 };
