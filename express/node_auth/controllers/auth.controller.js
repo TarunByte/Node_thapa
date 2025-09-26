@@ -1,12 +1,9 @@
-import { ZodError } from "zod";
 import {
   authenticateUser,
   clearUserSession,
   comparePassword,
-  createAccessToken,
-  createRefreshToken,
-  createSession,
   createUser,
+  findUserById,
   getUserByEmail,
   hashPassword,
 } from "../services/auth.services.js";
@@ -14,10 +11,7 @@ import {
   loginUserSchema,
   registerUserSchema,
 } from "../validators/auth-validator.js";
-import {
-  ACCESS_TOKEN_EXPIRY,
-  REFRESH_TOKEN_EXPIRY,
-} from "../config/constant.js";
+import { getAllShortLinks } from "../services/shorterner.services.js";
 
 export const getRegisterPage = (req, res) => {
   if (req.user) return res.redirect("/");
@@ -134,4 +128,25 @@ export const logoutUser = async (req, res) => {
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
   res.redirect("/login");
+};
+
+// getProfilePage
+
+export const getProfilePage = async (req, res) => {
+  if (!req.user) return res.send("Not logged in");
+
+  const user = await findUserById(req.user.id);
+  if (!user) return res.redirect("/login");
+
+  const userShortLinks = await getAllShortLinks(user.id);
+
+  return res.render("auth/profile", {
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      links: userShortLinks,
+    },
+  });
 };

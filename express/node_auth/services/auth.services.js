@@ -128,7 +128,7 @@ export const clearUserSession = async (sessionId) => {
   return db.delete(sessionsTable).where(eq(sessionsTable.id, sessionId));
 };
 
-//
+// authenticateUser
 export const authenticateUser = async ({ req, res, user, name, email }) => {
   // we need to create a session
   const session = await createSession(user.id, {
