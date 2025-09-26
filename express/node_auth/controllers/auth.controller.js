@@ -131,7 +131,6 @@ export const logoutUser = async (req, res) => {
 };
 
 // getProfilePage
-
 export const getProfilePage = async (req, res) => {
   if (!req.user) return res.send("Not logged in");
 
@@ -145,6 +144,7 @@ export const getProfilePage = async (req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      isEmailValid: user.isEmailValid,
       createdAt: user.createdAt,
       links: userShortLinks,
     },

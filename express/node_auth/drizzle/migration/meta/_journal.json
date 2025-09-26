@@ -8,6 +8,13 @@
       "when": 1758736450965,
       "tag": "0000_productive_franklin_richards",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1758890529082,
+      "tag": "0001_special_vampiro",
+      "breakpoints": true
     }
   ]
 }
