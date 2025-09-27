@@ -3,9 +3,12 @@ import {
   clearUserSession,
   comparePassword,
   createUser,
+  createVerifyEmailLink,
   findUserById,
+  generateRandomToken,
   getUserByEmail,
   hashPassword,
+  insertVerifyEmailToken,
 } from "../services/auth.services.js";
 import {
   loginUserSchema,
@@ -163,5 +166,21 @@ export const getVerifyEmailPage = async (req, res) => {
 
   return res.render("auth/verify-email", {
     email: req.user.email,
+  });
+};
+
+// resendVerificationLink
+export const resendVerificationLink = async (req, res) => {
+  if (!req.user) return res.redirect("/");
+  const user = await findUserById(req.user.id);
+  if (!user || user.isEmailValid) return res.redirect("/");
+
+  const randomToken = generateRandomToken();
+
+  await insertVerifyEmailToken({ userId: req.user.id, token: randomToken });
+
+  const verifyEmailLink = await createVerifyEmailLink({
+    email: req.user.email,
+    token: randomToken,
   });
 };

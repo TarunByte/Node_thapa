@@ -1,6 +1,10 @@
 import { eq } from "drizzle-orm";
 import { db } from "../config/db-client.js";
-import { sessionsTable, usersTable } from "../drizzle/schema.js";
+import {
+  sessionsTable,
+  usersTable,
+  verifyEmailTokenTable,
+} from "../drizzle/schema.js";
 // import bcrypt from "bcrypt";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
@@ -9,6 +13,8 @@ import {
   MILLISECONDS_PER_SECOND,
   REFRESH_TOKEN_EXPIRY,
 } from "../config/constant.js";
+
+import crypto from "crypto";
 
 export const getUserByEmail = async (email) => {
   const [user] = await db
@@ -158,4 +164,27 @@ export const authenticateUser = async ({ req, res, user, name, email }) => {
     ...baseConfig,
     maxAge: REFRESH_TOKEN_EXPIRY,
   });
+};
+
+// generateRandomToken
+export const generateRandomToken = async (digit = 8) => {
+  const min = 10 ** (digit - 1); // 10000000
+  const max = 10 ** digit; // 100000000
+
+  return crypto.randomInt(min, max).toString();
+};
+
+//insertVerifyEmailToken
+export const insertVerifyEmailToken = async ({ userId, token }) => {
+  await db
+    .delete(verifyEmailTokenTable)
+    .where(lt(verifyEmailTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`));
+
+  return await db.insert(verifyEmailTokenTable).values({ userId, token });
+};
+
+//createVerifyEmailLink
+export const createVerifyEmailLink = async ({ email, token }) => {
+  const uriEncodedEmail = encodeURIComponent(email);
+  return `${process.env.FRONTEND_URL}/verify-email-token?token=${token}$email=${uriEncodedEmail}`;
 };
