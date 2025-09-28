@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, lt, sql } from "drizzle-orm";
 import { db } from "../config/db-client.js";
 import {
   sessionsTable,
@@ -167,7 +167,7 @@ export const authenticateUser = async ({ req, res, user, name, email }) => {
 };
 
 // generateRandomToken
-export const generateRandomToken = async (digit = 8) => {
+export const generateRandomToken = (digit = 8) => {
   const min = 10 ** (digit - 1); // 10000000
   const max = 10 ** digit; // 100000000
 
@@ -176,11 +176,15 @@ export const generateRandomToken = async (digit = 8) => {
 
 //insertVerifyEmailToken
 export const insertVerifyEmailToken = async ({ userId, token }) => {
-  await db
-    .delete(verifyEmailTokenTable)
-    .where(lt(verifyEmailTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`));
+  try {
+    await db
+      .delete(verifyEmailTokenTable)
+      .where(lt(verifyEmailTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`));
 
-  return await db.insert(verifyEmailTokenTable).values({ userId, token });
+    await db.insert(verifyEmailTokenTable).values({ userId, token });
+  } catch (error) {
+    console.log("error ", error);
+  }
 };
 
 //createVerifyEmailLink

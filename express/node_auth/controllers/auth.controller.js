@@ -15,6 +15,7 @@ import {
   registerUserSchema,
 } from "../validators/auth-validator.js";
 import { getAllShortLinks } from "../services/shorterner.services.js";
+import { sendEmail } from "../lib/nodemailer.js";
 
 export const getRegisterPage = (req, res) => {
   if (req.user) return res.redirect("/");
@@ -183,4 +184,16 @@ export const resendVerificationLink = async (req, res) => {
     email: req.user.email,
     token: randomToken,
   });
+
+  sendEmail({
+    to: req.user.email,
+    subject: "Verify your email",
+    html: `
+        <h1>Click the link below to verify your email</h1>
+        <p>You can use this token: <code>${randomToken}</code></p>
+        <a href="${verifyEmailLink}">Verify Email </a>
+    `,
+  }).catch();
+
+  res.redirect("/verify-email");
 };
