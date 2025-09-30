@@ -1,4 +1,4 @@
-import { eq, lt, sql } from "drizzle-orm";
+import { and, eq, gte, lt, sql } from "drizzle-orm";
 import { db } from "../config/db-client.js";
 import {
   sessionsTable,
@@ -225,3 +225,69 @@ export const createVerifyEmailLink = async ({ email, token }) => {
 //? ✅ Easier URL Construction – No need for manual ? and & handling.
 //? ✅ Automatic Encoding – Prevents issues with special characters.
 //? ✅ Better Readability – Clean and maintainable code.
+
+//findVerificationEmailToken
+
+export const findVerificationEmailToken = async ({ token }) => {
+  const tokenData = await db
+    .select({
+      userId: verifyEmailTokenTable.userId,
+      token: verifyEmailTokenTable.token,
+      expiresAt: verifyEmailTokenTable.expiresAt,
+    })
+    .from(verifyEmailTokenTable)
+    .where(
+      and(
+        eq(verifyEmailTokenTable.token, token),
+        gte(verifyEmailTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`)
+      )
+    );
+
+  // If no token found, return null
+  if (!tokenData.length) {
+    return null;
+  }
+
+  const { userId } = tokenData[0];
+  // const userId = tokenData[0].userId;
+
+  const userData = await db
+    .select({
+      userId: usersTable.id,
+      email: usersTable.email,
+    })
+    .from(usersTable)
+    .where(eq(usersTable.id, userId));
+
+  // If user not found, return null
+  if (!userData.length) {
+    return null;
+  }
+
+  return {
+    userId: userData[0].userId,
+    email: userData[0].email,
+    token: tokenData[0].token,
+    expiresAt: tokenData[0].expiresAt,
+  };
+};
+
+//verifyUserEmailAndUpdate
+export const verifyUserEmailAndUpdate = async (email) => {
+  return db
+    .update(usersTable)
+    .set({ isEmailValid: true })
+    .where(eq(usersTable.email, email));
+};
+
+//clearVerifyEmailTokens
+export const clearVerifyEmailTokens = async (userId) => {
+  // const [user] = await db
+  //   .select()
+  //   .from(usersTable)
+  //   .where(eq(usersTable.email, email));
+
+  return await db
+    .delete(verifyEmailTokenTable)
+    .where(eq(verifyEmailTokenTable.userId, userId));
+};

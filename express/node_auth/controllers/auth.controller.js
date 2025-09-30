@@ -1,18 +1,22 @@
 import {
   authenticateUser,
   clearUserSession,
+  clearVerifyEmailTokens,
   comparePassword,
   createUser,
   createVerifyEmailLink,
   findUserById,
+  findVerificationEmailToken,
   generateRandomToken,
   getUserByEmail,
   hashPassword,
   insertVerifyEmailToken,
+  verifyUserEmailAndUpdate,
 } from "../services/auth.services.js";
 import {
   loginUserSchema,
   registerUserSchema,
+  verifyEmailSchema,
 } from "../validators/auth-validator.js";
 import { getAllShortLinks } from "../services/shorterner.services.js";
 import { sendEmail } from "../lib/nodemailer.js";
@@ -196,4 +200,24 @@ export const resendVerificationLink = async (req, res) => {
   }).catch();
 
   res.redirect("/verify-email");
+};
+
+//verifyEmailToken
+export const verifyEmailToken = async (req, res) => {
+  const { data, error } = verifyEmailSchema.safeParse(req.query);
+
+  if (error) {
+    return res.send("Verification link invalid or expired!");
+  }
+
+  const token = await findVerificationEmailToken(data);
+  console.log("~ verifyEmailToken ~ token:", token);
+  if (!token) res.send("Verification link invalid or expired!");
+
+  await verifyUserEmailAndUpdate(token.email);
+
+  // clearVerifyEmailTokens(token.email).catch(console.error);
+  clearVerifyEmailTokens(token.userId).catch(console.error);
+
+  return res.redirect("/profile");
 };
