@@ -11,6 +11,7 @@ import {
   getUserByEmail,
   hashPassword,
   insertVerifyEmailToken,
+  sendNewVerifyEmailLink,
   verifyUserEmailAndUpdate,
 } from "../services/auth.services.js";
 import {
@@ -63,6 +64,8 @@ export const postRegister = async (req, res) => {
   // res.redirect("/login");
 
   await authenticateUser({ req, res, user, name, email });
+
+  await sendNewVerifyEmailLink({ email, userId: user.id });
 
   res.redirect("/");
 };
@@ -180,24 +183,7 @@ export const resendVerificationLink = async (req, res) => {
   const user = await findUserById(req.user.id);
   if (!user || user.isEmailValid) return res.redirect("/");
 
-  const randomToken = generateRandomToken();
-
-  await insertVerifyEmailToken({ userId: req.user.id, token: randomToken });
-
-  const verifyEmailLink = await createVerifyEmailLink({
-    email: req.user.email,
-    token: randomToken,
-  });
-
-  sendEmail({
-    to: req.user.email,
-    subject: "Verify your email",
-    html: `
-        <h1>Click the link below to verify your email</h1>
-        <p>You can use this token: <code>${randomToken}</code></p>
-        <a href="${verifyEmailLink}">Verify Email </a>
-    `,
-  }).catch();
+  await sendNewVerifyEmailLink({ email: req.user.email, userId: req.user.id });
 
   res.redirect("/verify-email");
 };
