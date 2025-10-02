@@ -19,6 +19,7 @@ import {
   loginUserSchema,
   registerUserSchema,
   verifyEmailSchema,
+  verifyPasswordSchema,
   verifyUserSchema,
 } from "../validators/auth-validator.js";
 import { getAllShortLinks } from "../services/shorterner.services.js";
@@ -231,7 +232,7 @@ export const postEditProfile = async (req, res) => {
   // const user = req.body;
   const { data, error } = verifyUserSchema.safeParse(req.body);
   if (error) {
-    let errorMessage = JSON.parse(error);
+    let errorMessage = JSON.parse(error)[0].message;
     console.log("error:", errorMessage);
     req.flash("errors", errorMessage);
     return res.redirect("/edit-profile");
@@ -249,4 +250,18 @@ export const getChangePasswordPage = async (req, res) => {
   return res.render("auth/change-password", {
     errors: req.flash("errors"),
   });
+};
+
+//postChangePassword
+export const postChangePassword = async (req, res) => {
+  const { data, error } = verifyPasswordSchema.safeParse(req.body);
+  if (error) {
+    let errorMessage = JSON.parse(error)[0].message;
+    console.log("error:", errorMessage);
+    req.flash("errors", errorMessage);
+    return res.redirect("/change-password");
+  }
+
+  console.log("data: ", data);
+  return res.redirect("/change-password");
 };
