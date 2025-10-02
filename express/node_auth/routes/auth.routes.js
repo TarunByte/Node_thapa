@@ -24,6 +24,11 @@ router.route("/profile").get(authControllers.getProfilePage);
 router.route("/verify-email").get(authControllers.getVerifyEmailPage);
 
 router
+  .route("/edit-profile")
+  .get(authControllers.getEditProfilePage)
+  .post(authControllers.postEditProfile);
+
+router
   .route("/resend-verification-link")
   .post(authControllers.resendVerificationLink);
 
