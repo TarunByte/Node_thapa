@@ -28,6 +28,8 @@ router
   .get(authControllers.getEditProfilePage)
   .post(authControllers.postEditProfile);
 
+router.route("/change-password").get(authControllers.getChangePasswordPage);
+
 router
   .route("/resend-verification-link")
   .post(authControllers.resendVerificationLink);

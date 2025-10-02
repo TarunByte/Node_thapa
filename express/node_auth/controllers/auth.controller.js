@@ -241,3 +241,12 @@ export const postEditProfile = async (req, res) => {
 
   return res.redirect("/profile");
 };
+
+//getChangePasswordPage
+export const getChangePasswordPage = async (req, res) => {
+  if (!req.user) return res.redirect("/");
+
+  return res.render("auth/change-password", {
+    errors: req.flash("errors"),
+  });
+};
