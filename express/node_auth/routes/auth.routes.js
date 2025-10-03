@@ -37,7 +37,10 @@ router
   .route("/resend-verification-link")
   .post(authControllers.resendVerificationLink);
 
-router.route("/reset-password").get(authControllers.getResetPasswordPage);
+router
+  .route("/reset-password")
+  .get(authControllers.getResetPasswordPage)
+  .post(authControllers.postForgotPassword);
 
 router.route("/verify-email-token").get(authControllers.verifyEmailToken);
 
