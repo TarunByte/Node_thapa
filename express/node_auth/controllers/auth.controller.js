@@ -28,6 +28,7 @@ import {
 } from "../validators/auth-validator.js";
 import { getAllShortLinks } from "../services/shorterner.services.js";
 import { sendEmail } from "../lib/nodemailer.js";
+import { getHtmlFromMjmlTemplate } from "../lib/get-html-from-mjml-template.js";
 
 export const getRegisterPage = (req, res) => {
   if (req.user) return res.redirect("/");
@@ -307,5 +308,14 @@ export const postForgotPassword = async (req, res) => {
     const resetPasswordLink = await createResetPasswordLink({
       userId: user.id,
     });
+
+    const html = await getHtmlFromMjmlTemplate("reset-password-email", {
+      name: user.name,
+      link: resetPasswordLink,
+    });
+
+    console.log("html ", html);
   }
+
+  return res.redirect("/login");
 };
