@@ -42,6 +42,10 @@ router
   .get(authControllers.getResetPasswordPage)
   .post(authControllers.postForgotPassword);
 
+router
+  .route("/reset-password/:token")
+  .get(authControllers.getResetPasswordTokenPage);
+
 router.route("/verify-email-token").get(authControllers.verifyEmailToken);
 
 router.route("/logout").get(authControllers.logoutUser);
