@@ -44,7 +44,8 @@ router
 
 router
   .route("/reset-password/:token")
-  .get(authControllers.getResetPasswordTokenPage);
+  .get(authControllers.getResetPasswordTokenPage)
+  .post(authControllers.postResetPasswordToken);
 
 router.route("/verify-email-token").get(authControllers.verifyEmailToken);
 

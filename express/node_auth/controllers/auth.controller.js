@@ -1,5 +1,6 @@
 import {
   authenticateUser,
+  clearResetPasswordToken,
   clearUserSession,
   clearVerifyEmailTokens,
   comparePassword,
@@ -25,6 +26,7 @@ import {
   registerUserSchema,
   verifyEmailSchema,
   verifyPasswordSchema,
+  verifyResetPasswordSchema,
   verifyUserSchema,
 } from "../validators/auth-validator.js";
 import { getAllShortLinks } from "../services/shorterner.services.js";
@@ -336,4 +338,41 @@ export const getResetPasswordTokenPage = async (req, res) => {
     errors: req.flash("errors"),
     token,
   });
+};
+
+//! Extract password reset token from request parameters.
+//! validate token authenticity, expiration, and match with a previously issued token.
+//! If valid, get new password from request body and validate using a schema (e.g., Zod) for complexity.
+//! Identify user ID linked to the token.
+//! Invalidate all existing reset tokens for that user ID.
+//! Hash the new password with a secure algorithm.
+//! Update the user's password in the database with the hashed version.
+//! Redirect to login page or return a success response.
+
+//postResetPasswordToken
+export const postResetPasswordToken = async (req, res) => {
+  const { token } = req.params;
+  const passwordResetData = await getResetPasswordToken(token);
+  if (!passwordResetData) {
+    req.flash("errors", "Password Token is not matching");
+    return res.render("auth/wrong-reset-password-token");
+  }
+
+  const { data, error } = verifyResetPasswordSchema.safeParse(req.body);
+  if (error) {
+    let errorMessage = JSON.parse(error)[0].message;
+    console.log("error:", errorMessage);
+    req.flash("errors", errorMessage);
+    return res.redirect(`/reset-password/${token}`);
+  }
+
+  const { newPassword } = data;
+
+  const user = await findUserById(passwordResetData.userId);
+
+  await clearResetPasswordToken(user.id);
+
+  await updateUserPassword({ userId: user.id, newPassword });
+
+  return res.redirect("/login");
 };
