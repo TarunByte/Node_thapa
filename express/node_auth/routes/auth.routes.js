@@ -7,6 +7,14 @@ const router = Router();
 // router.get("/login", authControllers.getLoginPage);
 // router.post("/login", authControllers.postLogin);
 
+router.route("/me").get(authControllers.getMe);
+
+router.route("/profile").get(authControllers.getProfilePage);
+
+router.route("/verify-email").get(authControllers.getVerifyEmailPage);
+
+router.route("/verify-email-token").get(authControllers.verifyEmailToken);
+
 router
   .route("/register")
   .get(authControllers.getRegisterPage)
@@ -16,12 +24,6 @@ router
   .route("/login")
   .get(authControllers.getLoginPage)
   .post(authControllers.postLogin);
-
-router.route("/me").get(authControllers.getMe);
-
-router.route("/profile").get(authControllers.getProfilePage);
-
-router.route("/verify-email").get(authControllers.getVerifyEmailPage);
 
 router
   .route("/edit-profile")
@@ -47,7 +49,8 @@ router
   .get(authControllers.getResetPasswordTokenPage)
   .post(authControllers.postResetPasswordToken);
 
-router.route("/verify-email-token").get(authControllers.verifyEmailToken);
+router.route("/google").get(authControllers.getGoogleLoginPage);
+router.route("/google/callback").get(authControllers.getGoogleLoginCallback);
 
 router.route("/logout").get(authControllers.logoutUser);
 

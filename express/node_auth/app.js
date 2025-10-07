@@ -7,7 +7,7 @@ import session from "express-session";
 import { authRoutes } from "./routes/auth.routes.js";
 import { shortenerRoutes } from "./routes/shortener.routes.js";
 import { verifyAuthentication } from "./middlewares/verify-auth-middleware.js";
-import { env } from "./config/env.js";
+import { envPort } from "./config/env.js";
 
 const app = express();
 
@@ -49,7 +49,7 @@ app.use(shortenerRoutes);
 
 try {
   // await connectDB();
-  app.listen(env.PORT, () => {
+  app.listen(envPort.PORT, () => {
     console.log("Server starting on port 3000");
   });
 } catch (error) {
