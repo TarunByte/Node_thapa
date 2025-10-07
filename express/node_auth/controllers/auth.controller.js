@@ -28,6 +28,7 @@ import {
   forgotPasswordSchema,
   loginUserSchema,
   registerUserSchema,
+  setPasswordSchema,
   verifyEmailSchema,
   verifyPasswordSchema,
   verifyResetPasswordSchema,
@@ -76,7 +77,7 @@ export const postRegister = async (req, res) => {
   const hashedPassword = await hashPassword(password);
 
   const [user] = await createUser({ name, email, password: hashedPassword });
-  console.log(user);
+  console.log("New user:", user);
 
   // res.redirect("/login");
 
@@ -184,6 +185,7 @@ export const getProfilePage = async (req, res) => {
       name: user.name,
       email: user.email,
       isEmailValid: user.isEmailValid,
+      hasPassword: Boolean(user.password),
       createdAt: user.createdAt,
       links: userShortLinks,
     },
@@ -495,4 +497,40 @@ export const getGoogleLoginCallback = async (req, res) => {
   await authenticateUser({ req, res, user, name, email });
 
   res.redirect("/");
+};
+
+//getSetPasswordPage
+export const getSetPasswordPage = async (req, res) => {
+  if (!req.user) return res.redirect("/");
+
+  return res.render("auth/set-password", {
+    errors: req.flash("errors"),
+  });
+};
+
+//postSetPassword
+export const postSetPassword = async (req, res) => {
+  const { data, error } = setPasswordSchema.safeParse(req.body);
+
+  if (error) {
+    let errorMessage = JSON.parse(error)[0].message;
+    console.log("error:", errorMessage);
+    req.flash("errors", errorMessage);
+    return res.redirect("/set-password");
+  }
+
+  const { newPassword } = data;
+
+  const user = await findUserById(req.user.id);
+  if (user.password) {
+    req.flash(
+      "errors",
+      "You already have your Password, Instead Change your password"
+    );
+    return res.redirect("/set-password");
+  }
+
+  await updateUserPassword({ userId: req.user.id, newPassword });
+
+  return res.redirect("/profile");
 };

@@ -67,7 +67,7 @@ export const forgotPasswordSchema = z.object({
   email: emailSchema,
 });
 
-export const verifyResetPasswordSchema = z
+const passwordSchema = z
   .object({
     newPassword: z
       .string()
@@ -88,3 +88,6 @@ export const verifyResetPasswordSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"], // Error will be associated with confirmPassword field
   });
+
+export const verifyResetPasswordSchema = passwordSchema;
+export const setPasswordSchema = passwordSchema;
