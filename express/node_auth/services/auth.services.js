@@ -1,4 +1,4 @@
-import { and, eq, gte, lt, sql } from "drizzle-orm";
+import { and, eq, gte, isNull, lt, sql } from "drizzle-orm";
 import { db } from "../config/db-client.js";
 import {
   oauthAccountsTable,
@@ -452,12 +452,20 @@ export async function linkUserWithOauth({
   userId,
   provider,
   providerAccountId,
+  avatarURL,
 }) {
   await db.insert(oauthAccountsTable).values({
     userId,
     provider,
     providerAccountId,
   });
+
+  if (avatarURL) {
+    await db
+      .update(usersTable)
+      .set({ avatarURL })
+      .where(and(eq(usersTable.id, userId), isNull(usersTable.avatarURL)));
+  }
 }
 
 //createUserWithOauth
@@ -466,6 +474,7 @@ export async function createUserWithOauth({
   email,
   provider,
   providerAccountId,
+  avatarURL,
 }) {
   const user = await db.transaction(async (trx) => {
     const [user] = await trx
@@ -473,7 +482,8 @@ export async function createUserWithOauth({
       .values({
         email,
         name,
-        password: "",
+        // password: "",
+        avatarURL,
         isEmailValid: true, // we know that google's email are valid
       })
       .$returningId();

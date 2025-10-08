@@ -186,6 +186,7 @@ export const getProfilePage = async (req, res) => {
       email: user.email,
       isEmailValid: user.isEmailValid,
       hasPassword: Boolean(user.password),
+      avatarURL: user.avatarURL,
       createdAt: user.createdAt,
       links: userShortLinks,
     },
@@ -463,9 +464,11 @@ export const getGoogleLoginCallback = async (req, res) => {
   console.log("token google:", tokens);
 
   const claims = decodeIdToken(tokens.idToken());
-  const { sub: googleUserId, name, email } = claims;
+  console.log("claim:", claims);
 
-  // there are few things that we should do
+  const { sub: googleUserId, name, email, picture } = claims;
+
+  //! there are few things that we should do
   // Condition 1: User already exists with google's oauth linked
   // Condition 2: User already exists with the same email but google's oauth isn't linked
   // Condition 3: User doesn't exists.
@@ -482,6 +485,7 @@ export const getGoogleLoginCallback = async (req, res) => {
       userId: user.id,
       provider: "google",
       providerAccountId: googleUserId,
+      avatarURL: picture,
     });
   }
 
@@ -492,6 +496,7 @@ export const getGoogleLoginCallback = async (req, res) => {
       email,
       provider: "google",
       providerAccountId: googleUserId,
+      avatarURL: picture,
     });
   }
   await authenticateUser({ req, res, user, name, email });
