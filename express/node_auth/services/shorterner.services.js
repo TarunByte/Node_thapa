@@ -1,13 +1,24 @@
 // import { PrismaClient } from "@prisma/client";
-import { eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import { db } from "../config/db-client.js";
 import { shortLinksTable } from "../drizzle/schema.js";
 
-export const getAllShortLinks = async (userId) => {
-  return await db
+export const getAllShortLinks = async ({ userId, limit = 10, offset = 0 }) => {
+  const condition = eq(shortLinksTable.userId, userId);
+  const shortLinks = await db
     .select()
     .from(shortLinksTable)
-    .where(eq(shortLinksTable.userId, userId));
+    .where(condition)
+    .orderBy(desc(shortLinksTable.createdAt))
+    .limit(limit)
+    .offset(offset);
+
+  const [{ totalCount }] = await db
+    .select({ totalCount: count() })
+    .from(shortLinksTable)
+    .where(condition);
+
+  return { shortLinks, totalCount };
 };
 
 export const getShortLinkByShortCode = async (shortCode) => {
