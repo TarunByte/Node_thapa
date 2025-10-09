@@ -177,7 +177,8 @@ export const getProfilePage = async (req, res) => {
   const user = await findUserById(req.user.id);
   if (!user) return res.redirect("/login");
 
-  const userShortLinks = await getAllShortLinks(user.id);
+  const { totalCount } = await getAllShortLinks({ userId: user.id });
+  console.log("totalCount ", totalCount);
 
   return res.render("auth/profile", {
     user: {
@@ -188,7 +189,7 @@ export const getProfilePage = async (req, res) => {
       hasPassword: Boolean(user.password),
       avatarURL: user.avatarURL,
       createdAt: user.createdAt,
-      links: userShortLinks,
+      links: totalCount,
     },
   });
 };
@@ -249,6 +250,7 @@ export const getEditProfilePage = async (req, res) => {
 
   return res.render("auth/edit-profile", {
     name: user.name,
+    avatarURL: user.avatarURL,
     errors: req.flash("errors"),
   });
 };
@@ -266,7 +268,15 @@ export const postEditProfile = async (req, res) => {
     return res.redirect("/edit-profile");
   }
 
-  await updateUserByName({ userId: req.user.id, name: data.name });
+  // await updateUserByName({ userId: req.user.id, name: data.name });
+
+  const fileUrl = req.file ? `uploads/avatar/${req.file.filename}` : undefined;
+
+  await updateUserByName({
+    userId: req.user.id,
+    name: data.name,
+    avatarURL: fileUrl,
+  });
 
   return res.redirect("/profile");
 };
